@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,18 +38,31 @@ public class MainActivity extends AppCompatActivity {
     public static RecyclerView recycler;
     public static RecyclerViewAdapter recyclerAdapter;
 
+    private Button btn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recycler = findViewById(R.id.currency_recycler_view);
         saveHelper = new RequestSaveHelper(this);
+        btn = findViewById(R.id.update_btn);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestSaveHelper.dbManager.openDb();
+                RequestSaveHelper.dbManager.deleteFromDb();
+                saveHelper.getRequest();
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        saveHelper.dbManager.openDb();
+        RequestSaveHelper.dbManager.openDb();
         currencyList = saveHelper.getCurrencyList();
         if (currencyList.size() == 0) {
             saveHelper.getRequest();
@@ -60,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        saveHelper.dbManager.closeDb();
+        RequestSaveHelper.dbManager.closeDb();
     }
 
     public static void setRecyclerView(Context context) {

@@ -40,7 +40,6 @@ public class DbManager {
 
     public void changePrices(Currency currency, String newValue, String newPrev) {
         int id = getIdByCode(currency.getCharCode());
-//        Log.i("UPDATE_ID", "updateData: " + id + "; " + currency.getCharCode());
         db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.CHAR_CODE, currency.getCharCode());
@@ -94,8 +93,14 @@ public class DbManager {
         return -1;
     }
 
+    public void deleteFromDb() {
+        db.execSQL("delete from " + Constants.TABLE_NAME);
+    }
+
     public void closeDb() {
         dbHelper.close();
     }
+
+
 }
 

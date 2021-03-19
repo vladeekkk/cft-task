@@ -3,8 +3,6 @@ package com.currency;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -20,10 +18,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class RequestSaveHelper {
+
+    private static final String TAG = "MY_TAG";
+    private static final String URL = "https://www.cbr-xml-daily.ru/daily_json.js";
+
     private Context context;
     private RequestQueue queue;
-    public static final String TAG = "MY_TAG";
-    private static final String URL = "https://www.cbr-xml-daily.ru/daily_json.js";
 
 
     public static DbManager dbManager;
@@ -48,7 +48,6 @@ public class RequestSaveHelper {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Log.i(TAG, "onResponse: " + response.getJSONObject("Valute"));
                             JSONObject jsonArray = response.getJSONObject("Valute");
                             Iterator iterator = jsonArray.keys();
                             while (iterator.hasNext()) {
@@ -66,8 +65,8 @@ public class RequestSaveHelper {
                             for (Currency currency : currencyList) {
                                 dbManager.insertToDb(currency);
                             }
+                            MainActivity.setRecyclerView(context);
                             currencyList.clear();
-//                            MainActivity.setRecyclerView(context);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
