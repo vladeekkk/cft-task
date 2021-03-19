@@ -3,6 +3,8 @@ package com.currency;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -21,24 +23,25 @@ public class RequestSaveHelper {
     private Context context;
     private RequestQueue queue;
     public static final String TAG = "MY_TAG";
+    private static final String URL = "https://www.cbr-xml-daily.ru/daily_json.js";
+
 
     public static DbManager dbManager;
 
     private List<Currency> currencyList = new ArrayList<>();
 
-    public RequestSaveHelper(Context context, RequestQueue queue, List<Currency> currencyList) {
+    public RequestSaveHelper(Context context) {
         this.context = context;
         this.queue = Volley.newRequestQueue(context);
-        this.currencyList = currencyList;
         dbManager = new DbManager(context);
     }
 
     public List<Currency> getCurrencyList() {
-        return currencyList;
+        return dbManager.getAllListFromDb();
     }
 
+
     public void getRequest() {
-        String URL = "https://www.cbr-xml-daily.ru/daily_json.js";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -63,10 +66,8 @@ public class RequestSaveHelper {
                             for (Currency currency : currencyList) {
                                 dbManager.insertToDb(currency);
                             }
-                            List<Currency> temp = dbManager.getStockListFromDb();
-                            for (Currency c : temp) {
-                                Log.i(TAG, "onResponseAAAAAAAAA: " + c.getName());
-                            }
+                            currencyList.clear();
+//                            MainActivity.setRecyclerView(context);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -79,6 +80,4 @@ public class RequestSaveHelper {
         });
         queue.add(request);
     }
-
-
 }

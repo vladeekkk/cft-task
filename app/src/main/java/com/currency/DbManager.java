@@ -51,7 +51,7 @@ public class DbManager {
         db.update(Constants.TABLE_NAME, values, " _ID=" + id, null);
     }
 
-    public List<Currency> getStockListFromDb() {
+    public List<Currency> getAllListFromDb() {
         List<Currency> tempList = new ArrayList<>();
         Cursor cursor = db.query(
                 Constants.TABLE_NAME,
