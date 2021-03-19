@@ -1,25 +1,44 @@
 package com.currency;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Currency {
 
+    @PrimaryKey
     private int id;
 
+    @ColumnInfo(name = Constants.CHAR_CODE)
     private String charCode;
 
+    @ColumnInfo(name = Constants.NOMINAL)
     private int nominal;
 
+    @ColumnInfo(name = Constants.NAME)
     private String name;
 
-    private double value;
+    @ColumnInfo(name = Constants.VALUE)
+    private String value;
 
-    private double previous;
+    @ColumnInfo(name = Constants.PREVIOUS)
+    private String previous;
 
-    public Currency(String charCode, int nominal, String name, double value, double previous) {
+    public Currency(String charCode, int nominal, String name, String value, String previous) {
         this.charCode = charCode;
         this.nominal = nominal;
         this.name = name;
         this.value = value;
         this.previous = previous;
+    }
+
+    public Currency(String charCode, int nominal, String name, double value, double previous) {
+        this.charCode = charCode;
+        this.nominal = nominal;
+        this.name = name;
+        this.value = String.valueOf(value);
+        this.previous = String.valueOf(previous);
     }
 
     public int getId() {
@@ -54,19 +73,19 @@ public class Currency {
         this.name = name;
     }
 
-    public double getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
-    public double getPrevious() {
+    public String getPrevious() {
         return previous;
     }
 
-    public void setPrevious(double previous) {
+    public void setPrevious(String previous) {
         this.previous = previous;
     }
 }

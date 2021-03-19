@@ -31,51 +31,26 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue queue;
 
     public static final String TAG = "MY_TAG";
-
+    public RequestSaveHelper saveHelper;
     private List<Currency> currencyList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        queue = Volley.newRequestQueue(this);
-        getRequest();
+        saveHelper = new RequestSaveHelper(this, queue, currencyList);
+        saveHelper.getRequest();
     }
 
-    public void getRequest() {
-        String URL = "https://www.cbr-xml-daily.ru/daily_json.js";
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.i(TAG, "onResponse: " + response.getJSONObject("Valute"));
-                            JSONObject jsonArray = response.getJSONObject("Valute");
-                            Iterator iterator = jsonArray.keys();
-                            while (iterator.hasNext()) {
-                                String currentKey = iterator.next().toString();
-                                JSONObject currencyItem = jsonArray.getJSONObject(currentKey);
-                                currencyList.add(new Currency(
-                                        currencyItem.getString("CharCode"),
-                                        currencyItem.getInt("Nominal"),
-                                        currencyItem.getString("Name"),
-                                        currencyItem.getDouble("Value"),
-                                        currencyItem.getDouble("Previous")
-                                ));
-                                Log.i(TAG, "onResponse: " + currentKey);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        queue.add(request);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        saveHelper.dbManager.openDb();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveHelper.dbManager.closeDb();
+    }
 }

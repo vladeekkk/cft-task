@@ -16,7 +16,7 @@ public class Constants {
 
     public static final String TABLE_STRUCTURE = "CREATE TABLE IF NOT EXISTS " +
             TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY," + CHAR_CODE + " TEXT," +
-            NOMINAL + " TEXT," + NAME + " TEXT," + VALUE + " TEXT," + PREVIOUS + " TEXT)";
+            NOMINAL + " INTEGER," + NAME + " TEXT," + VALUE + " TEXT," + PREVIOUS + " TEXT)";
 
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
